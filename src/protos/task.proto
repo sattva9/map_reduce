@@ -1,0 +1,38 @@
+syntax = "proto3";
+package task;
+
+service Task {
+    rpc GetTask (Empty) returns (TaskResponse);
+    rpc MapTaskComplete (MapTaskCompleteRequest) returns (Empty);
+    rpc ReduceTaskComplete (ReduceTaskCompleteRequest) returns (Empty);
+}
+
+message Empty {}
+
+enum TaskType {
+    IDLE = 0;
+    EXIT = 1;
+    MAP = 2;
+    REDUCE = 3;
+}
+
+message TaskResponse {
+    TaskType task_type = 1;
+    optional TaskData data = 2;
+}
+
+message TaskData {
+    repeated string input_files = 1;
+    uint32 task_id = 2;
+    uint32 n_reduce = 3;
+    string output_path = 4;
+}
+
+message MapTaskCompleteRequest {
+    uint32 task_id = 1;
+    map<uint32, string> files = 2;
+}
+
+message ReduceTaskCompleteRequest {
+    uint32 task_id = 1;
+}
